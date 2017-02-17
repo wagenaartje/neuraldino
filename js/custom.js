@@ -52,89 +52,46 @@ function customLoop(){
   if(isObject){
     convertData();
 
-    if(!isTraining){
+    if($('.training').prop('checked')){
       var response = computeData();
       activateData(response);
-      log('Response ' + response);
-      chart.series[0].addPoint(response);
+      addPointToChart(response);
+    } else if(currentKey == null){
+      trainingset.push({input: [speed,distance,dino_y,obst_y,obst_width,obst_height], output:[0]});
+      zeros++;
     } else {
-      if(currentKey == null){
-        trainingset.push({input: [speed,distance,dino_y,obst_y,obst_width,obst_height], output:[0]});
-        zeros++;
-      } else {
-        log(currentKey);
-        trainingset.push({input: [speed,distance,dino_y,obst_y,obst_width,obst_height], output:[1]});
-        ones++;
-      }
-      updateProgressBar();
-      $(".setsize").text(trainingset.length);
+      trainingset.push({input: [speed,distance,dino_y,obst_y,obst_width,obst_height], output:[1]});
+      ones++;
     }
+
+    updateProgressBar();
+    updateButtons();
   }
 }
 
-function updateProgressBar(){
-  var total = zeros + ones;
-  $('.zeros').css('width', zeros/total * 100 + '%');
-  $('.ones').css('width', ones/total * 100 + '%');
-}
-
-function evenTrainingSet(){
-  if(zeros > ones){
-    var extra = zeros - ones;
-    var type = 0;
-  } else {
-    var extra = ones - zeros;
-    var type = 1;
-  }
-
-  while(extra > 0){
-    var random = Math.round(Math.random()*(trainingset.length-1));
-    if(trainingset[random].output[0] == type){
-      trainingset.splice(random, 1)
-      extra--;
-      console.log(extra);
-      if(type == 1){
-        ones--;
-      } else {
-        zeros--;
-      }
-
-      updateProgressBar();
-    }
-  }
-}
-
-function log(text){
-  $('.log').append(" > ", text, "<br>");
-  $('.log').animate({ scrollTop: $('.log').prop("scrollHeight")}, 10);
-}
 
 function trainNetwork(amount, t_rate){
-  //evenTrainingSet();
-  trainer.train(trainingset, {
-    rate: t_rate,
-    error: 0.0005,
-    iterations: amount,
-    shuffle: true,
-    cost: Trainer.cost.MSE,
-    log: 1,
-    schedule: {
-      every: 10, // repeat this task every 500 iterations
-      do: function(data) {
-          // custom log
-          log("error " + Math.round(data.error *10000)/10000 + " iteration no. " + data.iterations);
+  if(trainingset.length > 0){
+    trainer.train(trainingset, {
+      rate: t_rate,
+      error: 0.0005,
+      iterations: amount,
+      shuffle: true,
+      cost: Trainer.cost.MSE,
+      log: 1,
+      schedule: {
+        every: amount,
+        do: function(data){
+          log('Trained the network ' + amount + ' times, learning rate ' + t_rate);
+          log('New error: ' + Math.round(data.error*10000)/10000);
+        }
       }
-    }
-  });
-
-  trainingAmount += amount;
-  $(".trainingamount").text(trainingAmount);
+    });
+    trainingAmount += amount;
+    $(".trainingamount").text(trainingAmount);
+  }
 }
 function activateData(response){
-  // Response > 0.6, jump!
-  // Response < 0.4, duk!
-  // 0.6 > response > 0.4, nothing!
-
   if(response > 0.01){
     if (currentKey == null){
       keyDown(1);
@@ -149,7 +106,6 @@ function activateData(response){
 }
 
 function computeData(){
-  //console.log([speed,distance,dino_y,obst_y,obst_width,obst_height]);
   return network.activate([speed,distance,dino_y,obst_y,obst_width,obst_height]);
 }
 
@@ -209,4 +165,49 @@ function keyUp(action){
       game.tRex.setDuck(false);
   }
 
+}
+
+function exportNetwork(){
+  var content = network.toJSON();
+  content = JSON.stringify(content);
+  var name = 's' + trainingset.length + 't' + trainingAmount + '.txt';
+  download(name, content);
+}
+
+function importNetwork(){
+  var input = document.createElement('input');
+  input.type = 'file';
+  input.click();
+  $(input).change(function(e){
+    f = input.files[0];
+
+    if (f) {
+          var r = new FileReader();
+          r.onload = function(e) {
+    	      var content = e.target.result;
+            var json = JSON.parse(content);
+            network = Network.fromJSON(json);
+            alert('Import success');
+          }
+          r.readAsText(f);
+        } else {
+          alert("Failed to load file");
+        }
+  });
+
+
+}
+
+// http://stackoverflow.com/questions/3665115/create-a-file-in-memory-for-user-to-download-not-through-server
+function download(filename, text) {
+  var element = document.createElement('a');
+  element.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(text));
+  element.setAttribute('download', filename);
+
+  element.style.display = 'none';
+  document.body.appendChild(element);
+
+  element.click();
+
+  document.body.removeChild(element);
 }

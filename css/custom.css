@@ -8,13 +8,24 @@
 .above{
   text-align: center;
   font-family: 'Press Start 2P', cursive;
-  margin-bottom: -60px;
+  margin-bottom: -70px;
   margin-top: 40px;
 }
-html{
-  overflow: hidden;
-}
+
 .panel-heading,.panel{
 
   border-color: #ccc;
+}
+.container{
+  width: 680px;
+  border-left: 2px solid #5bc0de;
+  border-right: 2px solid #5bc0de;
+  box-shadow: 2px 0 0 #337ab7 inset,
+              -2px 0 0 #337ab7 inset;
+  padding-left: 40px;
+  padding-right: 40px;
+  height: 100%;
+}
+.noclick{
+  opacity: 0.5;
 }

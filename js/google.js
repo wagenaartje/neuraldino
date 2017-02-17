@@ -671,6 +671,7 @@
                     if (!this.playing) {
                         this.loadSounds();
                         this.playing = true;
+                        log('Game started!');
                         this.update();
                         if (window.errorPageController) {
                             errorPageController.trackEasterEgg();
@@ -775,6 +776,8 @@
             this.stop();
             this.crashed = true;
             this.distanceMeter.acheivement = false;
+
+            log('Game over! Score: ' + Math.round(Math.ceil(this.distanceRan) * 0.025));
 
             this.tRex.update(100, Trex.status.CRASHED);
 

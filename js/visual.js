@@ -63,19 +63,25 @@ function generateChart() {
 
 }
 
-jQuery(function ($) {
-    $('.panel-heading span.clickable').on("click", function (e) {
-        if ($(this).hasClass('panel-collapsed')) {
-            // expand the panel
-            $(this).parents('.panel').find('.panel-body').slideDown();
-            $(this).removeClass('panel-collapsed');
-            $(this).find('i').removeClass('glyphicon-chevron-down').addClass('glyphicon-chevron-up');
-        }
-        else {
-            // collapse the panel
-            $(this).parents('.panel').find('.panel-body').slideUp();
-            $(this).addClass('panel-collapsed');
-            $(this).find('i').removeClass('glyphicon-chevron-up').addClass('glyphicon-chevron-down');
-        }
-    });
-});
+function updateButtons(){
+	if(zeros + ones > 0){
+		$('.teach').attr('class', 'btn btn-default teach');
+	}
+}
+
+function addPointToChart(point){
+	var shift = chart.series[0].data.length > 100;
+	chart.series[0].addPoint(point, true, shift, false);
+}
+
+function updateProgressBar(){
+  var total = zeros + ones;
+  $('.zeros').css('width', zeros/total * 100 + '%');
+  $('.ones').css('width', ones/total * 100 + '%');
+	$(".setsize").text(trainingset.length);
+}
+
+function log(text){
+  $('.log').append(" > ", text, "<br>");
+  $('.log').animate({ scrollTop: $('.log').prop("scrollHeight")}, 10);
+}

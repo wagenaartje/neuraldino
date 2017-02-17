@@ -32,17 +32,13 @@ html, body {
   line-height: 1.55;
   margin: 0 auto;
   max-width: 600px;
-  padding-top: 100px;
   width: 100%;
 }
 
 .offline .runner-container {
   height: 150px;
   max-width: 600px;
-  overflow: hidden;
-  position: absolute;
-  top: 50px;
-  width: 44px;
+  margin-bottom: -70px;
 }
 
 .offline .runner-canvas {
@@ -50,17 +46,12 @@ html, body {
   max-width: 600px;
   opacity: 1;
   overflow: hidden;
-  position: absolute;
-  top: 0;
   z-index: 2;
 }
 
 .offline .controller {
   background: rgba(247, 247, 247, .1);
   height: 100vh;
-  left: 0;
-  position: absolute;
-  top: 0;
   width: 100vw;
   z-index: 1;
 }
