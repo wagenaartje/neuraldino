@@ -29,7 +29,7 @@ function generateChart() {
 			title: null,
 		},
 		tooltip: {
-			pointFormat: '{series.name} produced <b>{point.y:,.0f}</b><br/>warheads in {point.x}'
+			pointFormat: 'Activation value of {point.y: ,.f}'
 		},
 		plotOptions: {
 			area: {

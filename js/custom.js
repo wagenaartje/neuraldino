@@ -1,12 +1,5 @@
 /******************************************************************************\
-It should work as follows: the neural network will output either 1 or 0, when
-it has outputted 1 and stops outputting anything, it should get a keydown, like
-wise it should keydown a 1 when transisting to a 0
 
-Inputs:
-- Speed, distance, dino_y, object_y, object_width, object_height
-
-KEYCODE CAN ONLY BE 1 OR null AT THE MOMENT
 \******************************************************************************/
 
 var network;
@@ -50,6 +43,7 @@ $( document ).ready(function() {
 function customLoop(){
   getGameData();
   if(isObject){
+    //drawNeuronLines();
     convertData();
 
     if($('.training').prop('checked')){
@@ -66,6 +60,7 @@ function customLoop(){
 
     updateProgressBar();
     updateButtons();
+
   }
 }
 
@@ -211,3 +206,16 @@ function download(filename, text) {
 
   document.body.removeChild(element);
 }
+
+/*function drawNeuronLines(){
+  game.canvasCtx.beginPath();
+  game.canvasCtx.moveTo(dino_x, dino_y+47);
+  game.canvasCtx.lineTo(obst_x, obst_y+obst_height);
+
+  game.canvasCtx.strokeStyle = '#ff0000';
+  game.canvasCtx.stroke();
+  game.canvasCtx.moveTo(dino_x, dino_y);
+  game.canvasCtx.lineTo(dino_x+speed*10, dino_y);
+  game.canvasCtx.strokeStyle = '#ccc';
+  game.canvasCtx.stroke();
+}*/

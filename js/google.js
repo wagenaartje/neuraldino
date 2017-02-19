@@ -2430,6 +2430,7 @@
          * Draw the horizon line.
          */
         draw: function () {
+
             this.canvasCtx.drawImage(Runner.imageSprite, this.sourceXPos[0],
                 this.spritePos.y,
                 this.sourceDimensions.WIDTH, this.sourceDimensions.HEIGHT,
